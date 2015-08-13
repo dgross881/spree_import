@@ -334,6 +334,8 @@ GEM
       multi_json (~> 1.0)
       rubyzip (~> 1.0)
       websocket (~> 1.0)
+    shoulda-matchers (2.7.0)
+      activesupport (>= 3.0.0)
     simplecov (0.10.0)
       docile (~> 1.1.0)
       json (~> 1.8)
@@ -396,11 +398,13 @@ DEPENDENCIES
   delayed_job_active_record
   factory_girl (~> 4.5)
   ffaker
+  paperclip
   poltergeist (~> 1.6.0)
   pry-rails
   rspec-rails (~> 3.1)
   sass-rails (~> 4.0.2)
   selenium-webdriver
+  shoulda-matchers (~> 2.7.0)
   simplecov
   spree!
   spree_auth_devise!

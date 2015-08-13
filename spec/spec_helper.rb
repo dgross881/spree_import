@@ -4,6 +4,7 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 
 require 'rspec/rails'
+require 'paperclip/matchers'
 require 'pry'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
@@ -16,7 +17,7 @@ RSpec.configure do |config|
   config.fail_fast = false
   config.filter_run focus: true
   config.run_all_when_everything_filtered = true
-
+  config.include Paperclip::Shoulda::Matchers
 
   config.expect_with :rspec do |expectations|
     expectations.syntax = :expect

@@ -37,4 +37,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'pry-rails'
   s.add_development_dependency 'webmock'
   s.add_development_dependency 'poltergeist', '~> 1.6.0'
+  s.add_development_dependency 'shoulda-matchers', '~> 2.7.0'
 end
