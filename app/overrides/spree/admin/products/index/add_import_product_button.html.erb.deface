@@ -1,0 +1,13 @@
+<!-- insert_after 'erb:contains("content_for :page_actions do")' -->
+<%= form_for [:admin, @product_import], :method => :post, :html => { :multipart => true, id: "import_products" } do |f| %>
+  <fieldset>
+    <%= f.field_container :csv_import do %>
+      <%= f.label :csv_import, Spree.t(:csv_import) %>
+      <%= f.file_field :csv_import %>
+    <% end %>
+  </fieldset>
+    <p class="form-buttons">
+      <%= button t("actions.create") %>
+    </p>
+<% end %>
+

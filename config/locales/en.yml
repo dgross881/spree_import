@@ -1,0 +1,4 @@
+en:
+  activerecord:
+    attributes:
+    csv_import: Product CSV Import
