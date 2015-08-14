@@ -1,4 +1,7 @@
 en:
   activerecord:
     attributes:
-    csv_import: Product CSV Import
+  actions:
+    create: "Create"
+  spree:
+    csv_import: Spree CSV Import

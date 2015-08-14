@@ -1,7 +1,7 @@
 module Spree
   module AdminProductsControllerExtensions
     def index
-      @product_import = ProductImport.create(params[:product_import])
+      @product_import = ProductImport.new
       super
     end 
   end

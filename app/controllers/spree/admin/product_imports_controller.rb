@@ -14,7 +14,6 @@ module Spree
         end 
       end
 
-
       def csv_import_params
         params.require(:spree_product_import).permit(:csv_import)
       end 
