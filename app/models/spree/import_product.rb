@@ -2,7 +2,7 @@ require 'date'
 
 class ImportProduct
   attr_accessor :name, :description, :slug, :meta_description,
-                :meta_keywords, :meta_keywords, :promotionable
+                :meta_keywords, :meta_keywords, :promotionable,
                 :meta_title, :price, :vendor, :option1, :option2, 
                 :weight, :quantity, :tags, :type, :option_value
 
