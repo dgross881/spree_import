@@ -11,17 +11,17 @@ class Spree::ProductImport < ActiveRecord::Base
   def add_products!
     import_products 
 
-    products = @products_csv.map { |product|  ImportProduct.new(product)  }
+    products = @products_csv.map { |product|  Spree::ImportProduct.new(product)  }
 
     products.each do |product|
-    product = Spree::Product.create!(name: product.name, description: product.description,
+    new_product = Spree::Product.create!(name: product.name, description: product.description,
                                      meta_title: product.meta_title, meta_description: product.meta_description,
                                      meta_keywords: "#{product.slug}, #{product.name}, the Squirrelz",
                                      available_on: Time.zone.now, price: product.price,
                                      shipping_category: Spree::ShippingCategory.find_by!(name: 'Shipping'))
 
-      product.tag_list = product.tags
-      product.slug = product.slug
+      new_product.tag_list = product.tags
+      new_product.slug = product.slug
 
       add_product_option_type(product, new_product)
       add_product_propery(product, new_product)
