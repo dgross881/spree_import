@@ -5,7 +5,8 @@ module Spree
     attr_accessor :name, :description, :slug, :meta_description,
                   :meta_keywords, :meta_keywords, :promotionable,
                   :meta_title, :price, :vendor, :option1, :option2, 
-                  :weight, :quantity, :tags, :type, :option_value
+                  :weight, :quantity, :tags, :type, :option_value,
+                  :taxons
 
     def initialize(csv_row)
        @name = csv_row[:name] 
@@ -17,9 +18,10 @@ module Spree
        @meta_title = csv_row[:meta_title] 
        @price = csv_row[:price].to_i
        @vendor = csv_row[:vendor]
-       @tags = csv[:tags]
-       @type = csv[:type]
-       @option_type = csv[:option_type]
+       @tags = csv_row[:tags]
+       @type = csv_row[:type]
+       @option_type = csv_row[:option_type]
+       @taxons = csv_row[:taxons]
     end
   end
 end 

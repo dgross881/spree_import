@@ -15,27 +15,27 @@ module Spree
       products = @products_csv.map { |product|  Spree::ImportProduct.new(product)  }
 
       products.each do |product|
-      product = Spree::Product.create!(name: product.name, description: product.description,
+      new_product = Spree::Product.create!(name: product.name, description: product.description,
                                        meta_title: product.meta_title, meta_description: product.meta_description,
                                        meta_keywords: "#{product.slug}, #{product.name}, the Squirrelz",
                                        available_on: Time.zone.now, price: product.price,
                                        shipping_category: Spree::ShippingCategory.find_by!(name: 'Shipping'))
 
-        product.tag_list = product.tags
-        product.slug = product.slug
-        product.option_types << product.option_type unless product.option_type.nil?
+        new_product.tag_list = product.tags
+        new_product.slug = product.slug
+        new_product.option_types << product.option_type unless product.option_type.nil?
         # can probably make the same method for properties and option types as taxons 
-        product.properties << product.type unless product.type.nil? 
-        add_product_taxons(product)
-        product.save!
+        new_product.properties << product.type unless product.type.nil? 
+        add_product_taxons(product, new_product)
+        new_product.save!
       end
     end
 
-    def add_product_taxons(product) 
+    def add_product_taxons(product, new_product) 
      if product.taxon.present? 
        seperate_taxons = product.taxon.split(",").map(&:strip)
-       taxon = sperate_taxons.map {|product| Spree::Taxon.joins(:translations).find_by(name: product) }
-       product.taxons << taxon unless taxon.nil?
+       taxon = sperate_taxons.map {|taxon| Spree::Taxon.joins(:translations).find_by(name: taxon) }
+       new_product.taxons << taxon unless taxon.nil?
      end 
     end 
 
