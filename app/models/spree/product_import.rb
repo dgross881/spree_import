@@ -16,14 +16,28 @@ class Spree::ProductImport < ActiveRecord::Base
                                      meta_keywords: "#{product.slug}, #{product.name}, the Squirrelz",
                                      available_on: Time.zone.now, price: product.price,
                                      shipping_category: Spree::ShippingCategory.find_by!(name: 'Shipping'))
-      product.tag_list = @tags
-      product.slug = @slug
+      product.tag_list = product.tags
+      product.slug = product.slug
       product.save!
+
+      add_variants
     end
+  end
+
+  def add_variants 
+    variant = Spree::Variant.create!(stock_items_count: product.qty, cost_price: product.price, weight: product.weight,
+                                     product: Spree::Product.find_by()
+    unless product.option1.blank?
+      variant.option_values << Spree::OptionValue.joins(:translations).find_by!(name: row['option1'])
+    end
+    unless product.option2.blank?
+      variant.option_values << Spree::OptionValue.joins(:translations).find_by!(name: row['option2'])
+    end
+    variant.save!
   end
 
   def import_products 
     options = {headers: true, header_converters: :symbol, skip_blanks: true}
-    @products_csv = CSV.read(Rails.root.join(self.csv_import.data, options))
+    @products_csv = CSV.read(self.csv_import.path, options)
   end
 end 
