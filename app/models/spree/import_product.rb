@@ -8,7 +8,7 @@ class ImportProduct
   def initialize(csv_row)
      name = csv_row[:name] 
      description = csv_row[:description]
-     slud =  csv_row[:slug] 
+     slug =  csv_row[:slug] 
      meta_description = csv_row[:meta_description] 
      meta_keywords = csv_row[:meta_keywords] 
      promotionable =  csv_row[:promotionable] 
