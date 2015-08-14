@@ -11,7 +11,7 @@ class Spree::ProductImport < ActiveRecord::Base
   def add_products!
     import_products 
 
-    products = @products_csv.foreach { |product|  ImportProduct.new(product)  }
+    products = @products_csv.map { |product|  ImportProduct.new(product)  }
 
     products.each do |product|
     product = Spree::Product.create!(name: product.name, description: product.description,
@@ -23,6 +23,7 @@ class Spree::ProductImport < ActiveRecord::Base
       product.tag_list = product.tags
       product.slug = product.slug
       product.option_types << product.option_type unless product.option_type.nil?
+      # can probably make the same method for properties and option types as taxons 
       product.properties << product.type unless product.type.nil? 
       add_product_taxons(product)
       product.save!
