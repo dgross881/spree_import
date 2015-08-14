@@ -1,9 +1,12 @@
 module Spree
   module AdminProductsControllerExtensions
-    def index
-      @product_import = ProductImport.new
-      super
-    end 
+   before_filter :new_import, :only => [:index]
+   
+
+   private 
+   def new_import
+     @product_import = ProductImport.new
+   end 
   end
 end
 
