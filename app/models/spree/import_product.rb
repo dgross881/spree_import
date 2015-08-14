@@ -14,5 +14,4 @@ class ImportProduct
      price = csv_row[:price]
      vendor =csv_row[:vendor]
   end
-
 end
