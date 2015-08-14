@@ -1,3 +1,5 @@
+require 'date'
+
 class ImportProduct
   attr_accessor :name, :description, :slug, :meta_description,
                 :meta_keywords, :meta_keywords, :promotionable
@@ -11,7 +13,7 @@ class ImportProduct
      meta_keywords = csv_row[:meta_keywords] 
      promotionable =  csv_row[:promotionable] 
      meta_title = csv_row[:meta_title] 
-     price = csv_row[:price]
-     vendor =csv_row[:vendor]
+     price = csv_row[:price].to_i
+     vendor = csv_row[:vendor]
   end
 end

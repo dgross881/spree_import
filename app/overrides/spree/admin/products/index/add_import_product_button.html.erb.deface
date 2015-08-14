@@ -4,6 +4,7 @@
     <%= f.field_container :csv_import do %>
       <%= f.label :csv_import, Spree.t(:csv_import) %>
       <%= f.file_field :csv_import %>
+      <%= f.error_message_on :csv_import %>
     <% end %>
   </fieldset>
     <p class="form-buttons">
