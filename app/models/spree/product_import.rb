@@ -21,7 +21,7 @@ class Spree::ProductImport < Spree::Base
                                      available_on: Time.zone.now, price: product.price,
                                      shipping_category: Spree::ShippingCategory.find_by!(name: 'Shipping'))
 
-      #new_product.tag_list = product.tags
+      new_product.tag_list = product.tags
       new_product.slug = product.slug
 
       add_product_option_type(product, new_product)
