@@ -1,9 +1,8 @@
 = Better Spree Import
 
-This feature is for mass product imports and product update for spree. The functionality and features are similar to shopifies product import.
+ This feature is for mass product imports and product updates for spree. The functionality and features are similar to shopifies product import.
 
-It's been built to be as simple as possible while still doing it's job, and almost the entire workflow of the script beyond creating products from a CSV file is configurable.
-This extension adds a tab to the administration area of Spree, allowing a logged-in user to select and upload a CSV file containing product information. The upload is then placed on queue for processing. Once it has been processed, the user who initiated the job is notified by email that their import has completed.
+ An import product button can be found on the admin products index page. The functionality allows for both importing and updating products and variants
 
 = CSV Headers
   sku slug name description taxonomy_a-z taxon_a-z option_type_a-z option_value_a-z property_type_a-z property_value_a-z weight depth height width meta_title qty price shipping
