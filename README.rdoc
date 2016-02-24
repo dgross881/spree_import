@@ -5,14 +5,14 @@ This feature is for mass product imports and product update for spree. The funct
 It's been built to be as simple as possible while still doing it's job, and almost the entire workflow of the script beyond creating products from a CSV file is configurable.
 This extension adds a tab to the administration area of Spree, allowing a logged-in user to select and upload a CSV file containing product information. The upload is then placed on queue for processing. Once it has been processed, the user who initiated the job is notified by email that their import has completed.
 
-CSV Headers
+= CSV Headers
   sku slug name description taxonomy_a-z taxon_a-z option_type_a-z option_value_a-z property_type_a-z property_value_a-z weight depth height width meta_title qty price shipping
 
-##Examples
+= Examples
   CSV files and examples can be found in Spec/fixtures
 
-Notes:
- ## Variants
+= Notes
+ = Variants
   CSV Headers for variants: option_value, option_type, weight, depth, height, width, price, and qty
 
   adding a variant: is done by adding the product slug that you would like association with the variant to the variants column. If the product exists a variant for that product will be created with values that were filled in.
@@ -21,7 +21,7 @@ Notes:
   updating a variant: is done by matching the variant sku, and prefferencing to the update_product button on admin
   update variant import example can be found in spec/fixtures/product_import_update_variant.xlsx
     
- ## Products
+ = Products
    CSV Headers for products: slug, update_slug, name, description, weight, property_type, property_value, taxonomy, taxon, shipping, meta_description, meta_title, meta_keywords, cost_price, price
 
    adding a product: Fill in the above Headers with values will create a Spree Product. Products can be given multiple taxons and product_properties.   
