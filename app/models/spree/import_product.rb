@@ -1,27 +1,23 @@
-require 'date'
-
 module Spree
   class ImportProduct
-    attr_accessor :name, :description, :slug, :meta_description,
-                  :meta_keywords, :meta_keywords, :promotionable,
-                  :meta_title, :price, :vendor, :option1, :option2, 
-                  :weight, :quantity, :tags, :type, :option_value,
-                  :taxons, :option_type
+    attr_accessor :name, :weight, :weight_units, :description, :height, :width, :depth,
+                  :qty, :price, :cost_price, :slug, :sku, :meta_description, :update_slug,
+                  :meta_title, :designer, :cost_currency, :image_src, :image_alt, :store, :shipping 
 
-    def initialize(csv_row)
-       @name = csv_row[:name]
-       @description = csv_row[:description]
-       @slug =  csv_row[:slug]
-       @meta_description = csv_row[:meta_description]
-       @meta_keywords = csv_row[:meta_keywords] 
-       @promotionable =  csv_row[:promotionable]
-       @meta_title = csv_row[:meta_title] 
-       @price = csv_row[:price].to_i
-       @vendor = csv_row[:vendor]
-       @tags = csv_row[:tags]
-       @type = csv_row[:type]
-       @option_type = csv_row[:option_type]
-       @taxons = csv_row[:taxons]
-    end
+
+    def initialize(args)
+      @cost_currency = 'CNY'
+      args.collect do |k,v|
+        if k.include?('qty')
+          instance_variable_set("@#{k}", remove_zeros(v.to_i)) unless v.nil?
+        else 
+          instance_variable_set("@#{k}", v.respond_to?(:strip) ? v.strip : v) unless v.nil?  
+        end 
+      end
+    end 
+    
+    def remove_zeros(csv)
+      csv.equal?(0) || csv.equal?(0.00) ? nil : csv 
+    end 
   end
 end 

@@ -1,14 +1,35 @@
-<!-- insert_after 'erb:contains("content_for :page_actions do")' -->
-<%= form_for [:admin, @product_import], :method => :post, :html => { :multipart => true } do |f| %>
-  <fieldset>
-    <%= f.field_container :csv_import do %>
-      <%= f.label :csv_import, Spree.t(:csv_import) %>
-      <%= f.file_field :csv_import %>
-      <%= f.error_message_on :csv_import %>
-    <% end %>
-  </fieldset>
-    <p class="form-buttons">
-      <%= button t("actions.create") %>
-    </p>
-<% end %>
+<!-- insert_after 'erb:contains("button_link_to Spree.t(:new_product)")' -->
+<%= label_tag 'import-show-button', class: 'btn btn-primary import-show' do %><span class="icon icon-floppy-disk"></span> Import<% end %>
+<%= check_box_tag 'import-show-button' %>
 
+<div class="choose-import">
+  <%= form_for [:admin, @product_import], method: :post, html: {multipart: true} do |f| %>
+    <div class="import-choice">
+      <%= f.field_container :csv_import do %>
+        <%= f.file_field :csv_import %>
+        <%= f.error_message_on :csv_import %>
+      <% end %>
+    </div>
+
+    <div class="import-choice">
+      <% f.object.preferences.keys.map do |key|  %>
+        <% field_name = "product_import[preferred_#{key}]" %>
+        <%= preference_field_tag(field_name, f.object.get_preference(key), type: :boolean) %> <%= label_tag(field_name, "#{key}".to_s.humanize) %><br/>
+      <% end %>
+    </div>
+
+    <hr>
+    <%= f.submit 'Import', icon: 'floppy-save', class: 'btn btn-primary' %>
+  <% end %>
+</div>
+
+<style>.import-show{text-transform:none}#import-show-button{display:none}#import-show-button:checked~.choose-import{display:block}.choose-import{display:none;text-align:center;position:absolute;border:1px solid #DDD;background-color:#fff;z-index:10;box-shadow:0 0 4px 0 #ddd;top:100%;padding:10px;right:15px}.import-choice{display:block;text-align:left;margin-bottom:20px;max-height:300px;overflow-y:auto;padding-right:10px}</style>
+
+<script>
+$(document).ready(function() {
+  $("input:checkbox").click(function(){
+    var group = "input:checkbox[name='"+$(this).attr("name")+"']";
+    $(this).attr("checked",true);
+  });
+ });
+</script>

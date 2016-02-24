@@ -1,5 +1,4 @@
-#source 'https://rubygems.org'
-source 'http://ruby.taobao.org/'
+source 'https://rubygems.org'
 
 
 group :test,:development do
