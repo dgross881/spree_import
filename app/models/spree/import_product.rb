@@ -2,7 +2,7 @@ module Spree
   class ImportProduct
     attr_accessor :name, :weight, :weight_units, :description, :height, :width, :depth,
                   :qty, :price, :cost_price, :slug, :sku, :meta_description, :update_slug,
-                  :meta_title, :designer, :cost_currency, :image_src, :image_alt, :store, :shipping 
+                  :meta_title, :cost_currency, :image_src, :image_alt, :store, :shipping 
 
 
     def initialize(args)
