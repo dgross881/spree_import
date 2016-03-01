@@ -30,7 +30,7 @@ class Spree::ProductImport < Spree::Base
                                              meta_description: product.meta_description, meta_title: product.meta_title,
                                              price: product.price, cost_price: product.cost_price,
                                              shipping_category: Spree::ShippingCategory.find_or_create_by!(name: product.shipping),
-                                             slug: product.slug.downcase)
+                                             slug: product.slug.downcase, available_on: Time.now.to_date)
 
         new_product.stores << Spree::Store.find_by_code(product.store) if product.store 
        # add_translations(new_product, product)
