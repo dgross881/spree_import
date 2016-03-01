@@ -17,10 +17,10 @@ class Spree::ProductImport < Spree::Base
       product = Spree::ImportProduct.new(Hash[[header, @products_csv.row(row)].transpose])
       product_found = Spree::Product.find_by(slug: product.slug.downcase)
       if product_found
-        new_variant = Spree::Variant.new(clean_variant(product))
+        new_variant = Spree::Variant.new(clean_up_values(product, false))
         new_variant.product = product_found
         new_variant.price = product.price
-        add_option_type(product, new_variant)
+        add_product_associations(product, new_variant, klass: "Spree::OptionType", value_one:  "option_type_", value_two: "option_value_")
         add_image(product, new_variant)
         new_variant.save!
         add_stock(new_variant, product)
@@ -34,12 +34,12 @@ class Spree::ProductImport < Spree::Base
 
         new_product.stores << Spree::Store.find_by_code(product.store) if product.store 
        # add_translations(new_product, product)
-        add_product_property(product, new_product)
-        add_taxons_and_taxonomies(product, new_product)
+        add_product_associations(product, new_product, klass: "Spree::Property", value_one: "property_type_", value_two: "property_value_")
+        add_product_associations(product, new_product, klass: "Spree::Taxonomy", value_one: "taxon_", value_two: "taxonomy_")
         if product.qty
-          new_variant = Spree::Variant.new(clean_variant(product), price: product.price)
+          new_variant = Spree::Variant.new(clean_up_values(product, false), price: product.price)
           new_variant.product = new_product
-          add_option_type(product, new_variant)
+          add_product_associations(product, new_variant, klass: "Spree::OptionType", value_one:  "option_type_", value_two: "option_value_")
           add_image(product, new_variant)
           new_variant.save!
           add_stock(new_variant, product)
@@ -55,19 +55,19 @@ class Spree::ProductImport < Spree::Base
       product = Spree::ImportProduct.new(Hash[[header, @products_csv.row(row)].transpose])
       if product.slug.present?
         update_product = Spree::Product.find_by(slug: product.slug.downcase)
-        update_product.update_attributes(clean_product(product))
+        update_product.update_attributes(clean_up_values(product))
         if product.update_slug.present?
           update_product.update_attributes(slug: product.update_slug)
         end 
         #add_translations(update_product, product)
-        add_taxons_and_taxonomies(product, update_product)
-        add_product_property(product, update_product)
+        add_product_associations(product, update_product, klass: "Spree::Taxonomy", value_one: "taxon_", value_two: "taxonomy_")
+        add_product_associations(product, update_product, klass: "Spree::Property", value_one: "property_type_", value_two: "property_value_")
         update_product.save!
       else
         update_variant = Spree::Variant.find_by(sku: product.sku )
-        update_variant.update_attributes(clean_variant(product))
+        update_variant.update_attributes(clean_up_values(product, false))
         update_variant.price = product.price if product.price.present?
-        add_option_type(product, update_variant)
+        add_product_associations(product, update_variant, klass: "Spree::OptionType", value_one: "option_type_", value_two: "option_value_")
         add_image(product, update_variant)
         update_variant.save!
         add_stock(update_variant, product)
@@ -77,46 +77,37 @@ class Spree::ProductImport < Spree::Base
 
   private
 
-  def add_taxons_and_taxonomies(product, new_product)
-    taxons = product.instance_values.select { |key, value| key.match(/taxon_/) && value.present? }
-    taxonomies = product.instance_values.select { |key, value| key.match(/taxonomy_/) && value.present? }
-    if taxons.present? && taxonomies.present?
-      taxons_and_taxonomies = Hash[taxonomies.values.zip taxons.values]
-      taxons_and_taxonomies.each do |taxonomy_value, taxon_value|
-        taxonomy = find_taxonomy(taxonomy_value.capitalize)
-        taxon = find_taxon(taxon_value.capitalize)
-        taxonomy.taxons << taxon if !taxonomy.taxons.include? taxon
-        taxon.products << new_product 
+  def add_product_associations(product, new_object, options={})
+    types = product.instance_values.select { |key, value| key.match(/#{options[:value_one]}/) && value.present? }
+    values = product.instance_values.select {|key, value| key.match(/#{options[:value_two]}/)  && value.present? }
+    if types.present? && values.present?
+      hash_types_and_values = Hash[types.values.zip values.values]
+      hash_types_and_values.map do |association, value| 
+        product_association_case(association, value, new_object, options[:klass])
       end
     end
   end
 
-  def add_option_type(product, new_variant)
-    option_types = product.instance_values.select { |key, value| key.match(/option_type_/) && value.present? }
-    option_values = product.instance_values.select {|key, value| key.match(/option_value_/)  && value.present? }
-    if option_types.present? && option_values.present?
-      option_values_and_types = Hash[option_types.values.zip option_values.values]
-      option_values_and_types.map do |option, value| 
-        option_type = find_option_type(option.capitalize)
-        option_value = Spree::OptionValue.find_or_create_by!(option_type: option_type, name: value, presentation: value)
-        new_variant.product.option_types << option_type if !new_variant.product.option_types.include?(option_type)
-        new_variant.option_values << option_value
-      end
-    end
-  end
+  def product_association_case(association, value, new_object, klass)
+    case klass
 
-  def add_product_property(product, new_product)
-    property_types  = product.instance_values.select { |key, value| key.match(/property_type_/) && value.present? }
-    property_values  = product.instance_values.select { |key, value| key.match(/property_value_/) && value.present? }
-
-    if property_types.present? && property_values.present?
-      property_values_and_types = Hash[property_types.values.zip property_values.values]
-      property_values_and_types.map do |property, value|
-        property = find_property(property.capitalize)
-        Spree::ProductProperty.find_or_create_by(property: property, value: value.to_yaml, product: new_product) if !new_product.properties.include?(property)
-      end
-    end
-  end
+    when "Spree::OptionType"
+      option_type = find_klass_or_create(association.capitalize, klass, association.capitalize)
+      option_value = Spree::OptionValue.find_or_create_by!(option_type: option_type, name: value, presentation: value)
+      new_object.product.option_types << option_type if !new_object.product.option_types.include?(option_type)
+      new_object.option_values << option_value
+    when "Spree::Property"
+      property = find_klass_or_create(association.capitalize, klass, association.capitalize)
+      Spree::ProductProperty.find_or_create_by(property: property, value: value.to_yaml, product: new_object) if !new_object.properties.include?(property)
+    when "Spree::Taxonomy"
+      taxonomy = find_klass_or_create(association.capitalize, klass)
+      taxon = find_klass_or_create(value.capitalize, "Spree::Taxon")
+      taxonomy.taxons << taxon if !taxonomy.taxons.include? taxon
+      taxon.products << new_object 
+    else 
+      raise "Please add the correct klass to options" 
+    end 
+  end 
 
   def add_image(product, new_variant)
     if product.image_src
@@ -133,28 +124,14 @@ class Spree::ProductImport < Spree::Base
     @products_csv =  Roo::Spreadsheet.open(self.csv_import.path, options)
   end
 
-  def clean_variant(variant)
-    variant.instance_values.symbolize_keys.reject {|key, value| !Spree::Variant.attribute_method?(key) || value.nil? }
+  def clean_up_values(product_import, is_product=true)
+    klass = is_product ? "Spree::Product".constantize : "Spree::Variant".constantize
+    product_import.instance_values.symbolize_keys.reject {|key, value| !klass.attribute_method?(key) || value.nil? }
   end
 
-  def clean_product(product)
-    product.instance_values.symbolize_keys.reject {|key, value| !Spree::Product.attribute_method?(key) || value.nil? }
-  end
-
-  def find_property(property)
-    Spree::Property.find_or_create_by(name: property, presentation: property)
-  end
-
-  def find_option_type(option)
-    Spree::OptionType.find_or_create_by(name: option, presentation: option)
-  end
-  
-  def find_taxon(taxon)
-    Spree::Taxon.find_or_create_by(name: taxon)
-  end
-
-  def find_taxonomy(taxonomy)
-    Spree::Taxonomy.find_or_create_by(name: taxonomy)
+  def find_klass_or_create(object, constant, presentation=nil)
+    klass = constant.constantize
+    presentation ? klass.find_or_create_by(name: object, presentation: presentation) : klass.find_or_create_by(name: object)
   end
 
   def add_stock(new_variant, product)
