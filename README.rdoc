@@ -1,6 +1,7 @@
 = Better Spree Import
 
  This feature is for mass product imports and product updates for spree. The functionality and features are similar to shopifies product import.
+ Although the code is not the same the idea was given to me by joshmcarthur/spree-import-products.
 
  An import product button can be found on the admin products index page. The functionality allows for both importing and updating products and variants
 
