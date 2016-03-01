@@ -90,7 +90,6 @@ class Spree::ProductImport < Spree::Base
 
   def product_association_case(association, value, new_object, klass)
     case klass
-
     when "Spree::OptionType"
       option_type = find_klass_or_create(association.capitalize, klass, association.capitalize)
       option_value = Spree::OptionValue.find_or_create_by!(option_type: option_type, name: value, presentation: value)
