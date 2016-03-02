@@ -6,7 +6,7 @@
  An import product button can be found on the admin products index page. The functionality allows for both importing and updating products and variants
 
 = installation 
-   gem 'spree_import', '~> 3.0', '>= 3.0.1'
+   gem 'spree_import', '~> 3.0', '>= 3.0.1', branch: '3-0-stable'
 
 = CSV Headers
   sku slug name description taxonomy_a-z taxon_a-z option_type_a-z option_value_a-z property_type_a-z property_value_a-z weight depth height width meta_title qty price shipping
