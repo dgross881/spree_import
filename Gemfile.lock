@@ -304,6 +304,10 @@ GEM
     roo (2.3.2)
       nokogiri (~> 1)
       rubyzip (~> 1.1, < 2.0.0)
+    rspec-activemodel-mocks (1.0.3)
+      activemodel (>= 3.0)
+      activesupport (>= 3.0)
+      rspec-mocks (>= 2.99, < 4.0)
     rspec-core (3.3.2)
       rspec-support (~> 3.3.0)
     rspec-expectations (3.3.1)
@@ -403,6 +407,7 @@ DEPENDENCIES
   paperclip
   poltergeist (~> 1.6.0)
   pry-rails
+  rspec-activemodel-mocks
   rspec-rails
   sass-rails (~> 4.0.2)
   selenium-webdriver

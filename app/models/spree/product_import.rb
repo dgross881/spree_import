@@ -99,8 +99,8 @@ class Spree::ProductImport < Spree::Base
       property = find_klass_or_create(association.capitalize, klass, association.capitalize)
       Spree::ProductProperty.find_or_create_by(property: property, value: value.to_yaml, product: new_object) if !new_object.properties.include?(property)
     when "Spree::Taxonomy"
-      taxonomy = find_klass_or_create(association.capitalize, klass)
-      taxon = find_klass_or_create(value.capitalize, "Spree::Taxon")
+      taxonomy = find_klass_or_create(value.capitalize, klass)
+      taxon = find_klass_or_create(association.capitalize, "Spree::Taxon")
       taxonomy.taxons << taxon if !taxonomy.taxons.include? taxon
       taxon.products << new_object 
     else 
